@@ -58,8 +58,8 @@ export class Board {
         this.cells[7][i].figure = new Queen(Colors.WHITE);
       }
     }
-    this.cells[2][0].figure = new Rook(Colors.BLACK)
-    this.cells[2][7].figure = new Pawn(Colors.WHITE)
+    this.cells[2][0].figure = new Bishop(Colors.BLACK)
+    // this.cells[3][1].figure = new Pawn(Colors.BLACK)
   }
   getBoardCopy() {
     const newBoard: Board = cloneDeep(this);
