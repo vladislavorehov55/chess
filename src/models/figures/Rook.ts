@@ -12,21 +12,56 @@ export class Rook extends Figures {
 
   canMove(board: Board, x: number, y: number) {
     const cells: Cell[][] = board.cells;
-    for (let moveStep = 0; moveStep < 8; moveStep++) {
-      if (cells[x][moveStep].figure === null) {
-        cells[x][moveStep].isAvailableForMove = true;
-      } else if (cells[x][moveStep].figure && cells[x][moveStep].figure?.color !== this.color) {
-        cells[x][moveStep].isAvailableForMove = true;
-        break;
+    let isContinueUpperLine = true;
+    let isContinueCheckRightLine = true;
+    let isContinueCheckLowerLine = true;
+    let isContinueCheckLeftLine = true;
+    for (let moveStep = 1; moveStep <= 7; moveStep++) {
+      if (isContinueUpperLine) {
+        if (cells[x - moveStep]?.[y]?.figure === undefined) {
+        } else if (cells[x - moveStep][y].figure === null) {
+          cells[x - moveStep][y].isAvailableForMove = true;
+        } else if (cells[x - moveStep][y].figure && cells[x - moveStep][y].figure?.color === this.color) {
+          isContinueUpperLine = false;
+        } else if (cells[x - moveStep][y].figure && cells[x - moveStep][y].figure?.color !== this.color) {
+          isContinueUpperLine = false;
+          cells[x - moveStep][y].isAvailableForMove = true;
+        }
+      }
+      if (isContinueCheckRightLine) {
+        if (cells[x]?.[y + moveStep]?.figure === undefined) {
+        } else if (cells[x][y + moveStep].figure === null) {
+          cells[x][y + moveStep].isAvailableForMove = true;
+        } else if (cells[x][y + moveStep].figure && cells[x][y + moveStep].figure?.color === this.color) {
+          isContinueCheckRightLine = false;
+        } else if (cells[x][y + moveStep].figure && cells[x][y + moveStep].figure?.color !== this.color) {
+          isContinueCheckRightLine = false;
+          cells[x][y + moveStep].isAvailableForMove = true;
+        }
+      }
+      if (isContinueCheckLowerLine) {
+        if (cells[x + moveStep]?.[y]?.figure === undefined) {
+        } else if (cells[x + moveStep][y].figure === null) {
+          cells[x + moveStep][y].isAvailableForMove = true;
+        } else if (cells[x + moveStep][y].figure && cells[x + moveStep][y].figure?.color === this.color) {
+          isContinueCheckLowerLine = false;
+        } else if (cells[x + moveStep][y].figure && cells[x + moveStep][y].figure?.color !== this.color) {
+          isContinueCheckLowerLine = false;
+          cells[x + moveStep][y].isAvailableForMove = true;
+        }
+      }
+      if (isContinueCheckLeftLine) {
+        if (cells[x]?.[y - moveStep]?.figure === undefined) {
+        } else if (cells[x][y - moveStep].figure === null) {
+          cells[x][y - moveStep].isAvailableForMove = true;
+        } else if (cells[x][y - moveStep].figure && cells[x][y - moveStep].figure?.color === this.color) {
+          isContinueCheckLeftLine = false;
+        } else if (cells[x][y - moveStep].figure && cells[x][y - moveStep].figure?.color !== this.color) {
+          isContinueCheckLeftLine = false;
+          cells[x][y - moveStep].isAvailableForMove = true;
+        }
       }
     }
-    for (let moveStep = 0; moveStep < 8; moveStep++) {
-      if (cells[moveStep][y].figure === null) {
-        cells[moveStep][y].isAvailableForMove = true;
-      } else if (cells[moveStep][y].figure && cells[moveStep][y].figure?.color !== this.color) {
-        cells[moveStep][y].isAvailableForMove = true;
-        break;
-      }
-    }
+
   }
 }
