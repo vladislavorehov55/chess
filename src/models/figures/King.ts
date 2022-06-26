@@ -26,7 +26,7 @@ export class King extends Figures {
       if (cells[x + stepX]?.[y + stepY]?.figure === undefined) {
       } else if (cells[x + stepX][y + stepY].figure === null) {
         cells[x + stepX][y + stepY].isAvailableForMove = true;
-      } else if (cells[x + stepX][y + stepY].figure && cells[x + stepX][y + stepY].figure?.color === this.color) {
+      } else if (cells[x + stepX][y + stepY].figure && cells[x + stepX][y + stepY].figure?.color !== this.color) {
         cells[x + stepX][y + stepY].isAvailableForMove = true;
       }
     }
