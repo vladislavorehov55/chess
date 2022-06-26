@@ -6,6 +6,8 @@ import {Knight} from './figures/Knight';
 import {Bishop} from './figures/Bishop';
 import {King} from './figures/King';
 import {Queen} from './figures/Queen';
+import {cloneDeep} from 'lodash';
+
 
 export class Board {
   cells: Cell[][] = []
@@ -56,16 +58,9 @@ export class Board {
         this.cells[7][i].figure = new Queen(Colors.WHITE);
       }
     }
-    this.cells[2][1].figure = new Rook(Colors.WHITE)
-    this.cells[5][6].figure = new Pawn(Colors.BLACK)
   }
   getBoardCopy() {
-    const newBoard: Board = new Board();
-    const newCells: Cell[][] = [];
-    for (let row of this.cells) {
-      newCells.push([...row])
-    }
-    newBoard.cells = newCells;
+    const newBoard: Board = cloneDeep(this);
     return newBoard
   }
 }
