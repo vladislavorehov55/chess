@@ -11,9 +11,13 @@ interface IBoardProps {
 const BoardComponent: FC<IBoardProps> = ({board, updateBoard}) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
+
   const selectCell = (cell: Cell) => {
-    if (cell.x === selectedCell?.x && cell.y === selectedCell?.y) {
+    /// ест фигуру
+    if (selectedCell && selectedCell?.figure?.color !== cell.figure?.color && cell.isAvailableForMove) {
       const newBoard: Board = board.getBoardCopy();
+      newBoard.cells[cell.x][cell.y].figure = selectedCell.figure;
+      newBoard.cells[selectedCell.x][selectedCell.y].figure = null;
       for (let row of newBoard.cells) {
         for (let cell of row) {
           cell.isAvailableForMove = false;
@@ -21,45 +25,54 @@ const BoardComponent: FC<IBoardProps> = ({board, updateBoard}) => {
       }
       updateBoard(newBoard)
       setSelectedCell(null);
+      return
     }
     if (cell.figure) {
-      console.log('1')
-      const isEqual = cell === selectedCell;
-      const newBoard: Board = board.getBoardCopy();
-      if (!isEqual) {
+      /// Отключает выделение клетки по второму клику
+      if (cell.x === selectedCell?.x && cell.y === selectedCell?.y) {
+        const newBoard: Board = board.getBoardCopy();
         for (let row of newBoard.cells) {
           for (let cell of row) {
             cell.isAvailableForMove = false;
           }
         }
+        setSelectedCell(null)
+        updateBoard(newBoard)
+        return
+      }
+      /// Отключаем возможные ходы при нажатии на другую фигуру
+      const newBoard: Board = board.getBoardCopy();
+      for (let row of newBoard.cells) {
+        for (let cell of row) {
+          cell.isAvailableForMove = false;
+        }
       }
       cell.figure.canMove(newBoard, cell.x, cell.y);
       updateBoard(newBoard);
-      setSelectedCell(cell !== selectedCell ? cell : null);
+      setSelectedCell(cell)
     }
-    else if (!cell.figure && selectedCell) {
-      console.log('2')
+    else if (cell.figure === null && selectedCell) {
       if (cell.isAvailableForMove) {
         const newBoard: Board = board.getBoardCopy();
-        newBoard.cells[cell.x][cell.y].figure = selectedCell.figure;
+        newBoard.cells[cell.x][cell.y].figure = selectedCell?.figure;
         newBoard.cells[selectedCell.x][selectedCell.y].figure = null;
         for (let row of newBoard.cells) {
           for (let cell of row) {
             cell.isAvailableForMove = false;
           }
         }
-        updateBoard(newBoard)
+        updateBoard(newBoard);
         setSelectedCell(null);
       }
-      else {
+      else if (!cell.isAvailableForMove) {
         const newBoard: Board = board.getBoardCopy();
         for (let row of newBoard.cells) {
           for (let cell of row) {
             cell.isAvailableForMove = false;
           }
         }
+        setSelectedCell(null)
         updateBoard(newBoard)
-        setSelectedCell(null);
       }
     }
   }

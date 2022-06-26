@@ -29,10 +29,10 @@ export class Pawn extends Figures {
         cells[x + direction][y].isAvailableForMove = !cells[x + direction][y].isAvailableForMove;
       }
     }
-
     if (cells[x + direction]?.[y + 1]?.figure && cells[x + direction][y + 1].figure?.color !== this.color) {
       cells[x + direction][y + 1].isAvailableForMove = !cells[x + direction][y + 1].isAvailableForMove;
-    } else if (cells[x + direction]?.[y - 1]?.figure && cells[x + direction][y - 1].figure?.color !== this.color) {
+    }
+    if (cells[x + direction]?.[y - 1]?.figure && cells[x + direction][y - 1].figure?.color !== this.color) {
       cells[x + direction][y - 1].isAvailableForMove = !cells[x + direction][y - 1].isAvailableForMove;
     }
   }
