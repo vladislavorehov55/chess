@@ -5,7 +5,7 @@ import {Board} from './models/Board';
 
 function App() {
   const [board, setBoard] = useState(new Board());
-
+  const [currentPlayer, setCurrentPlayer] = useState('white')
 
   useEffect(() => {
     const newBoard = new Board();
@@ -22,7 +22,11 @@ function App() {
     <div className="app">
       <BoardComponent board={board}
                       updateBoard={updateBoard}
+                      currentPlayer={currentPlayer}
       />
+      <div>
+        dsfv
+      </div>
     </div>
   );
 }

@@ -6,13 +6,15 @@ import {Cell} from '../models/Cell';
 interface IBoardProps {
   board: Board
   updateBoard: (newBoard: Board) => void
+  currentPlayer: string
 }
 
-const BoardComponent: FC<IBoardProps> = ({board, updateBoard}) => {
+const BoardComponent: FC<IBoardProps> = ({board, updateBoard, currentPlayer}) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
 
   const selectCell = (cell: Cell) => {
+    if (cell.figure && cell.figure.color !== currentPlayer && (selectedCell === null || selectedCell)) return
     /// ест фигуру
     if (selectedCell && selectedCell?.figure?.color !== cell.figure?.color && cell.isAvailableForMove) {
       const newBoard: Board = board.getBoardCopy();
