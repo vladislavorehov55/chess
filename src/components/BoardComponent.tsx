@@ -10,6 +10,7 @@ interface IBoardProps {
   setCurrentPlayer: (nextPlayer: string) => void
 }
 
+
 const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCurrentPlayer}) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
@@ -17,6 +18,13 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
     setBoard(newBoard);
   }
 
+  const moveFigure = (targetCell: Cell) => {
+    const copyBoard = board.getBoardCopy();
+    selectedCell?.figure?.move(copyBoard, selectedCell, targetCell);
+    cancelHighlightCells(copyBoard)
+    setSelectedCell(null);
+    setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+  }
 
   const selectCell = (cell: Cell) => {
     if (selectedCell) {
@@ -28,11 +36,7 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
           return
         }
         if (cell.isAvailableForMove) {
-          const copyBoard = board.getBoardCopy();
-          selectedCell?.figure?.move(copyBoard, selectedCell, cell);
-          cancelHighlightCells(copyBoard)
-          setSelectedCell(null);
-          setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white')
+          moveFigure(cell);
           return
         }
 
@@ -51,11 +55,7 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
           return
         }
         if (cell.isAvailableForMove) {
-          const copyBoard = board.getBoardCopy();
-          selectedCell?.figure?.move(copyBoard, selectedCell, cell);
-          cancelHighlightCells(copyBoard)
-          setSelectedCell(null);
-          setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white')
+          moveFigure(cell);
           return
         }
       }
