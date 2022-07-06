@@ -67,13 +67,17 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
 
     }
     if (cell.figure) {
+      if (cell.figure.color !== currentPlayer) {
+        alert('Нельзя ходить чужими фигурами')
+        return
+      }
       setSelectedCell(cell)
     }
   }
 
-  const highlightCells = (selectedCell: Cell) => {
+  const highlightCells = () => {
     const copyBoard = board.getBoardCopy()
-    selectedCell.figure?.canMove(copyBoard, selectedCell.x, selectedCell.y);
+    selectedCell?.figure?.canMove(copyBoard, selectedCell.x, selectedCell.y);
     updateBoard(copyBoard)
   }
 
@@ -89,12 +93,7 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
 
   useEffect(() => {
     if (selectedCell) {
-      if (currentPlayer !== selectedCell.figure?.color) {
-        alert('Нельзя ходить чужими фигурами');
-        setSelectedCell(null);
-        return
-      }
-      highlightCells(selectedCell)
+      highlightCells()
     }
   }, [selectedCell])
 
