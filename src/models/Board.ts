@@ -7,11 +7,13 @@ import {Bishop} from './figures/Bishop';
 import {King} from './figures/King';
 import {Queen} from './figures/Queen';
 import {cloneDeep} from 'lodash';
+import {Figure} from './figures/Figure';
 
 
 export class Board {
   cells: Cell[][] = []
-
+  whiteFiguresLost: Figure[] = []
+  blackFiguresLost: Figure[] = []
   initCells() {
     for (let i = 0; i < 8; i++) {
       const row: Cell[] = []

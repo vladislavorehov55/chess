@@ -1,83 +1,102 @@
 import {Board} from '../models/Board';
-import {FC, Fragment, useState} from 'react';
+import {FC, Fragment, useEffect, useState} from 'react';
 import CellComponent from './CellComponent';
 import {Cell} from '../models/Cell';
 
 interface IBoardProps {
   board: Board
-  updateBoard: (newBoard: Board) => void
+  setBoard: (newBoard: Board) => void
   currentPlayer: string
+  setCurrentPlayer: (nextPlayer: string) => void
 }
 
-const BoardComponent: FC<IBoardProps> = ({board, updateBoard, currentPlayer}) => {
+const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCurrentPlayer}) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
+
+  const updateBoard = (newBoard: Board) => {
+    setBoard(newBoard);
+  }
 
 
   const selectCell = (cell: Cell) => {
-    if (cell.figure && cell.figure.color !== currentPlayer && (selectedCell === null || selectedCell)) return
-    /// ест фигуру
-    if (selectedCell && selectedCell?.figure?.color !== cell.figure?.color && cell.isAvailableForMove) {
-      const newBoard: Board = board.getBoardCopy();
-      newBoard.cells[cell.x][cell.y].figure = selectedCell.figure;
-      newBoard.cells[selectedCell.x][selectedCell.y].figure = null;
-      for (let row of newBoard.cells) {
-        for (let cell of row) {
-          cell.isAvailableForMove = false;
+    if (selectedCell) {
+      /// выбрали клетку и нажали на пустую клетку
+      if (cell.figure === null) {
+        if (!cell.isAvailableForMove) {
+          cancelHighlightCells(board)
+          setSelectedCell(null)
+          return
         }
+        if (cell.isAvailableForMove) {
+          const copyBoard = board.getBoardCopy();
+          selectedCell?.figure?.move(copyBoard, selectedCell, cell);
+          cancelHighlightCells(copyBoard)
+          setSelectedCell(null);
+          setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white')
+          return
+        }
+
       }
-      updateBoard(newBoard)
-      setSelectedCell(null);
-      return
-    }
-    if (cell.figure) {
-      /// Отключает выделение клетки по второму клику
-      if (cell.x === selectedCell?.x && cell.y === selectedCell?.y) {
-        const newBoard: Board = board.getBoardCopy();
-        for (let row of newBoard.cells) {
-          for (let cell of row) {
-            cell.isAvailableForMove = false;
-          }
-        }
+      // выбрали клетку и нажали на нее же
+      if (selectedCell.x === cell.x && selectedCell.y === cell.y) {
+        cancelHighlightCells(board)
         setSelectedCell(null)
-        updateBoard(newBoard)
         return
       }
-      /// Отключаем возможные ходы при нажатии на другую фигуру
-      const newBoard: Board = board.getBoardCopy();
-      for (let row of newBoard.cells) {
-        for (let cell of row) {
-          cell.isAvailableForMove = false;
+      if (cell.figure) {
+        // выбрали клетку, затем нажали на клетку, на которой есть фигуру, но на нее нельзя ходить
+        if (!cell.isAvailableForMove) {
+          cancelHighlightCells(board)
+          setSelectedCell(cell)
+          return
+        }
+        if (cell.isAvailableForMove) {
+          const copyBoard = board.getBoardCopy();
+          selectedCell?.figure?.move(copyBoard, selectedCell, cell);
+          cancelHighlightCells(copyBoard)
+          setSelectedCell(null);
+          setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white')
+          return
         }
       }
-      cell.figure.canMove(newBoard, cell.x, cell.y);
-      updateBoard(newBoard);
+      if (cell.figure) {
+        cancelHighlightCells(board);
+        setSelectedCell(cell);
+        return
+      }
+
+    }
+    if (cell.figure) {
       setSelectedCell(cell)
     }
-    else if (cell.figure === null && selectedCell) {
-      if (cell.isAvailableForMove) {
-        const newBoard: Board = board.getBoardCopy();
-        newBoard.cells[cell.x][cell.y].figure = selectedCell?.figure;
-        newBoard.cells[selectedCell.x][selectedCell.y].figure = null;
-        for (let row of newBoard.cells) {
-          for (let cell of row) {
-            cell.isAvailableForMove = false;
-          }
-        }
-        updateBoard(newBoard);
-        setSelectedCell(null);
-      }
-      else if (!cell.isAvailableForMove) {
-        const newBoard: Board = board.getBoardCopy();
-        for (let row of newBoard.cells) {
-          for (let cell of row) {
-            cell.isAvailableForMove = false;
-          }
-        }
-        setSelectedCell(null)
-        updateBoard(newBoard)
+  }
+
+  const highlightCells = (selectedCell: Cell) => {
+    const copyBoard = board.getBoardCopy()
+    selectedCell.figure?.canMove(copyBoard, selectedCell.x, selectedCell.y);
+    updateBoard(copyBoard)
+  }
+
+  const cancelHighlightCells = (board: Board) => {
+    const copyBoard: Board = board.getBoardCopy();
+    for (let row of copyBoard.cells) {
+      for (let cell of row) {
+        cell.isAvailableForMove = false;
       }
     }
+    updateBoard(copyBoard)
   }
+
+  useEffect(() => {
+    if (selectedCell) {
+      if (currentPlayer !== selectedCell.figure?.color) {
+        alert('Нельзя ходить чужими фигурами');
+        setSelectedCell(null);
+        return
+      }
+      highlightCells(selectedCell)
+    }
+  }, [selectedCell])
 
 
   return (

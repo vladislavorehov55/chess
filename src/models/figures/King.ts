@@ -1,11 +1,11 @@
-import {Figures} from './Figures';
+import {Figure} from './Figure';
 import {Colors, FiguresNames} from '../../utils/enums';
 import whiteKingLogo from '../../assets/white-king.png';
 import blackKingLogo from '../../assets/black-king.png'
 import {Board} from '../Board';
 import {Cell} from '../Cell';
 
-export class King extends Figures {
+export class King extends Figure {
   constructor(color: Colors) {
     super(FiguresNames.KING, color, color === Colors.WHITE ? whiteKingLogo : blackKingLogo);
   }

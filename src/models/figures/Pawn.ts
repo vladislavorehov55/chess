@@ -1,4 +1,4 @@
-import {Figures} from './Figures';
+import {Figure} from './Figure';
 import {Colors, FiguresNames} from '../../utils/enums';
 import whitePawnLogo from '../../assets/white-pawn.png'
 import blackPawnLogo from '../../assets/black-pawn.png';
@@ -6,7 +6,7 @@ import {Cell} from '../Cell';
 import {Board} from '../Board';
 
 
-export class Pawn extends Figures {
+export class Pawn extends Figure {
   isFirstStep: Boolean
 
   constructor(color: Colors) {

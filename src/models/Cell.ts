@@ -1,5 +1,5 @@
 import {Colors} from '../utils/enums';
-import {Figures} from './figures/Figures';
+import {Figure} from './figures/Figure';
 import {King} from './figures/King';
 import {Bishop} from './figures/Bishop';
 import {Queen} from './figures/Queen';
