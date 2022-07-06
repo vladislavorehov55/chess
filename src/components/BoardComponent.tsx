@@ -40,7 +40,41 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
     kingsPositions.current[color] = {x, y};
   }
 
+  const isCheck = (selectedCell: Cell | null, targetCell: Cell) => {
+    if (selectedCell?.figure) {
+      const ourKingColor = currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK
+      const ourKingX = kingsPositions.current[ourKingColor].x;
+      const outKingY = kingsPositions.current[ourKingColor].y;
+      if (false) {}
 
+      const enemyKingColor = currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE;
+      const enemyKingX = kingsPositions.current[enemyKingColor].x;
+      const enemyKingY = kingsPositions.current[enemyKingColor].y;
+
+      const copyBoard = board.getBoardCopy();
+      selectedCell.figure?.canMove(copyBoard, targetCell.x, targetCell.y);
+
+      if (copyBoard.cells[enemyKingX][enemyKingY].isAvailableForMove) {
+        alert('Шах')
+      }
+    }
+  }
+
+  const isGameOver = (kingX: number, kingY: number) => {
+    const copyBoard = board.getBoardCopy();
+    for (let i = 0; i < board.cells.length; i++) {
+      const row = board.cells[i];
+      for (let j = 0; j < row.length; j++) {
+        const cell = row[j];
+        if (cell.figure?.color !== currentPlayer) {
+          cell.figure?.canMove(copyBoard, cell.x, cell.y);
+          if (board.cells[kingX][kingY].isAvailableForMove) {
+            return true
+          }
+        }
+      }
+    }
+  }
 
   const updateBoard = (newBoard: Board) => {
     setBoard(newBoard);
@@ -53,6 +87,7 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
     if (selectedCell?.figure?.name === FiguresNames.KING) {
       setKingsPosition(selectedCell?.figure?.color, targetCell.x, targetCell.y)
     }
+    isCheck(selectedCell, targetCell);
     cancelHighlightCells(copyBoard);
     setSelectedCell(null);
     setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
@@ -99,10 +134,10 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
 
     }
     if (cell.figure) {
-      if (cell.figure.color !== currentPlayer) {
-        alert('Нельзя ходить чужими фигурами')
-        return
-      }
+      // if (cell.figure.color !== currentPlayer) {
+      //   alert('Нельзя ходить чужими фигурами')
+      //   return
+      // }
       setSelectedCell(cell)
     }
   }
