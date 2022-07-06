@@ -1,7 +1,8 @@
 import {Board} from '../models/Board';
-import {FC, Fragment, useEffect, useState} from 'react';
+import {FC, Fragment, useEffect, useRef, useState} from 'react';
 import CellComponent from './CellComponent';
 import {Cell} from '../models/Cell';
+import {Colors, FiguresNames} from '../utils/enums';
 
 interface IBoardProps {
   board: Board
@@ -10,9 +11,36 @@ interface IBoardProps {
   setCurrentPlayer: (nextPlayer: string) => void
 }
 
+type KingsPositions = {
+  white: {
+    x: number
+    y: number
+  }
+  black: {
+    x: number
+    y: number
+  }
+}
 
 const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCurrentPlayer}) => {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
+
+  const kingsPositions = useRef<KingsPositions>({
+    white: {
+      x: 7,
+      y: 3,
+    },
+    black: {
+      x: 0,
+      y: 3
+    }
+  })
+
+  const setKingsPosition = (color: Colors, x: number, y: number) => {
+    kingsPositions.current[color] = {x, y};
+  }
+
+
 
   const updateBoard = (newBoard: Board) => {
     setBoard(newBoard);
@@ -21,7 +49,11 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
   const moveFigure = (targetCell: Cell) => {
     const copyBoard = board.getBoardCopy();
     selectedCell?.figure?.move(copyBoard, selectedCell, targetCell);
-    cancelHighlightCells(copyBoard)
+    // если фигура - король, то изменяем его координаты
+    if (selectedCell?.figure?.name === FiguresNames.KING) {
+      setKingsPosition(selectedCell?.figure?.color, targetCell.x, targetCell.y)
+    }
+    cancelHighlightCells(copyBoard);
     setSelectedCell(null);
     setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
   }
@@ -90,6 +122,8 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
     }
     updateBoard(copyBoard)
   }
+
+
 
   useEffect(() => {
     if (selectedCell) {
