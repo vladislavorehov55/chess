@@ -42,13 +42,13 @@ export class Board {
       else if (i === 1) {
         this.cells[0][i].figure = new Knight(Colors.BLACK);
         this.cells[0][7 - i].figure = new Knight(Colors.BLACK);
-        this.cells[7][i].figure = new Knight(Colors.WHITE);
-        this.cells[7][7 - i].figure = new Knight(Colors.WHITE);
+        // this.cells[7][i].figure = new Knight(Colors.WHITE);
+        this.cells[7][7 - i].figure = new Knight(Colors.WHITE)
       }
       else if (i === 2) {
         this.cells[0][i].figure = new Bishop(Colors.BLACK);
         this.cells[0][7 - i].figure = new Bishop(Colors.BLACK);
-        this.cells[7][i].figure = new Bishop(Colors.WHITE);
+        // this.cells[7][i].figure = new Bishop(Colors.WHITE);
         this.cells[7][7 - i].figure = new Bishop(Colors.WHITE);
       }
       else if (i === 3) {
@@ -57,7 +57,7 @@ export class Board {
       }
       else if (i === 4) {
         this.cells[0][i].figure = new Queen(Colors.BLACK);
-        this.cells[7][i].figure = new Queen(Colors.WHITE);
+        // this.cells[7][i].figure = new Queen(Colors.WHITE);
       }
     }
     this.cells[3][1].figure = new Queen(Colors.BLACK)
