@@ -232,12 +232,8 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
     }
     copyBoard = cancelHighlightCells(copyBoard);
     if (isMate(currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK, copyBoard)) {
-
       alert(`Мат игроку ${currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK}`)
     }
-      // else if (isCheck(selectedCell, targetCell, currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK)) {
-      //   alert(`Шах игроку ${currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK}`)
-    // }
     else if (isCheck(selectedCell, targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE)) {
       if (isCheckMate(targetCell, copyBoard)) {
         alert('Шах и мат')
@@ -276,7 +272,11 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
       if (cell.figure) {
         // выбрали клетку, затем нажали на клетку, на которой есть фигуру, но на нее нельзя ходить
         if (!cell.isAvailableForMove) {
+          console.log('MMMMM')
           // cancelHighlightCells(board)
+          if (cell.figure.color !== currentPlayer) {
+            return
+          }
           updateBoard(cancelHighlightCells(board))
           setSelectedCell(cell)
           return
