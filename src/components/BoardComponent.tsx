@@ -222,7 +222,20 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
   const updateBoard = (newBoard: Board) => {
     setBoard(newBoard);
   }
-
+  const isPawnInBoardEnd = (cell: Cell, targetCell: Cell) => {
+    if (cell.figure?.name === FiguresNames.PAWN) {
+      if (cell.figure.color === Colors.WHITE) {
+        if (targetCell.x === 0) {
+          return true
+        }
+      }
+      if (cell.figure.color === Colors.BLACK) {
+        if (targetCell.x === 7) {
+          return true
+        }
+      }
+    }
+  }
   const moveFigure = (targetCell: Cell) => {
     let copyBoard = board.getBoardCopy();
     selectedCell?.figure?.move(copyBoard, selectedCell, targetCell);
@@ -241,6 +254,7 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
       }
       alert(`Шах игроку ${currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE}`)
     }
+
     updateBoard(copyBoard);
     setSelectedCell(null);
     setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
