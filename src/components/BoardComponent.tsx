@@ -1,14 +1,18 @@
 import {Board} from '../models/Board';
-import {FC, Fragment, useEffect, useRef, useState} from 'react';
+import React, {FC, Fragment, useEffect, useRef} from 'react';
 import CellComponent from './CellComponent';
 import {Cell} from '../models/Cell';
 import {Colors, FiguresNames} from '../utils/enums';
 
-interface IBoardProps {
+interface IProps {
   board: Board
   setBoard: (newBoard: Board) => void
   currentPlayer: string
   setCurrentPlayer: (nextPlayer: string) => void
+  selectedCell: Cell | null
+  setSelectedCell: (cell: Cell | null) => void
+  setIsOpenedModalForm: (flag: boolean) => void
+  targetCellRef: React.MutableRefObject<Cell | null>
 }
 
 type KingsPositions = {
@@ -22,9 +26,9 @@ type KingsPositions = {
   }
 }
 
-const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCurrentPlayer}) => {
-  const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
-
+const BoardComponent: FC<IProps> = (props) => {
+  const {board, setBoard, currentPlayer, setCurrentPlayer, selectedCell, setSelectedCell,
+    setIsOpenedModalForm, targetCellRef} = props;
   const kingsPositions = useRef<KingsPositions>({
     white: {
       x: 7,
@@ -40,11 +44,9 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
     kingsPositions.current[color] = {x, y};
   }
   const isCheckMate = (targetCell: Cell, board: Board) => {
-    console.log('thththrth')
     const {x, y} = targetCell;
     const kingPosition = kingsPositions.current[currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE];
     if (x === kingPosition.x) {
-      console.log('1')
       const copyBoard1 = board.getBoardCopy();
       const copyBoard2 = board.getBoardCopy();
       for (let a = 0; a < board.cells.length; a++) {
@@ -75,7 +77,6 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
       }
     }
     if (y === kingPosition.y) {
-      console.log('2')
       const copyBoard1 = board.getBoardCopy();
       const copyBoard2 = board.getBoardCopy();
       for (let a = 0; a < board.cells.length; a++) {
@@ -107,7 +108,6 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
       }
     }
     if (x !== kingPosition.x && y !== kingPosition.y) {
-      console.log('3')
       const copyBoard1 = board.getBoardCopy();
       const copyBoard2 = board.getBoardCopy();
       for (let a = 0; a < board.cells.length; a++) {
@@ -119,8 +119,6 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
             if (kingPosition.y > y && kingPosition.x > x ) {
               for (let i = y, j = x; i < kingPosition.y; i++, j++) {
                 if (copyBoard1.cells[j][i].isAvailableForMove) {
-                  console.log(copyBoard1.cells[j][i])
-                  console.log('4')
                   return false
                 }
               }
@@ -128,7 +126,6 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
             if (kingPosition.y > y && kingPosition.x < x) {
               for (let i = y, j = x; i < kingPosition.y; i++, j--) {
                 if (copyBoard1.cells[j][i].isAvailableForMove) {
-                  console.log('5')
                   return false
                 }
               }
@@ -136,8 +133,6 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
             if (kingPosition.y < y && kingPosition.x > x) {
               for (let i = y, j = x; i < kingPosition.y; i--, j++) {
                 if (copyBoard1.cells[j][i].isAvailableForMove) {
-                  console.log('6')
-
                   return false
                 }
               }
@@ -145,7 +140,6 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
             if (kingPosition.y < y && kingPosition.x < x) {
               for (let i = y, j = x; i < kingPosition.y; i--, j--) {
                 if (copyBoard1.cells[j][i].isAvailableForMove) {
-                  console.log('7')
                   return false
                 }
               }
@@ -222,15 +216,17 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
   const updateBoard = (newBoard: Board) => {
     setBoard(newBoard);
   }
-  const isPawnInBoardEnd = (cell: Cell, targetCell: Cell) => {
-    if (cell.figure?.name === FiguresNames.PAWN) {
+  const isPawnInBoardEnd = (cell: Cell | null, targetCell: Cell) => {
+    if (cell?.figure?.name === FiguresNames.PAWN) {
       if (cell.figure.color === Colors.WHITE) {
         if (targetCell.x === 0) {
+          targetCellRef.current = targetCell;
           return true
         }
       }
       if (cell.figure.color === Colors.BLACK) {
         if (targetCell.x === 7) {
+          targetCellRef.current = targetCell;
           return true
         }
       }
@@ -254,10 +250,15 @@ const BoardComponent: FC<IBoardProps> = ({board, setBoard, currentPlayer, setCur
       }
       alert(`Шах игроку ${currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE}`)
     }
-
+    if (isPawnInBoardEnd(selectedCell, targetCell)) {
+      console.log('er')
+      setIsOpenedModalForm(true);
+    }
+    else {
+      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+    }
     updateBoard(copyBoard);
     setSelectedCell(null);
-    setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
   }
 
   const selectCell = (cell: Cell) => {

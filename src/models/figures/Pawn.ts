@@ -25,7 +25,7 @@ export class Pawn extends Figure {
       }
       this.isFirstStep = false;
     } else {
-      if (cells[x + direction][y] && !cells[x + direction][y].figure) {
+      if (cells[x + direction]?.[y] && !cells[x + direction][y].figure) {
         cells[x + direction][y].isAvailableForMove = !cells[x + direction][y].isAvailableForMove;
       }
     }

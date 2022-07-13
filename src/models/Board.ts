@@ -1,5 +1,5 @@
 import {Cell} from './Cell';
-import {Colors} from '../utils/enums';
+import {Colors, FiguresNames} from '../utils/enums';
 import {Pawn} from './figures/Pawn';
 import {Rook} from './figures/Rook';
 import {Knight} from './figures/Knight';
@@ -62,9 +62,28 @@ export class Board {
     }
     this.cells[3][1].figure = new Queen(Colors.BLACK)
     // this.cells[3][1].figure = new Pawn(Colors.BLACK)
+    this.cells[2][6].figure = new Pawn(Colors.WHITE)
   }
-  getBoardCopy() {
+  getBoardCopy(): Board {
     const newBoard: Board = cloneDeep(this);
     return newBoard
+  }
+  exchangePawn(x: number, y: number, figureName: FiguresNames, figureColor: Colors) {
+    const copyBoard: Board = this.getBoardCopy();
+    switch (figureName) {
+      case FiguresNames.BISHOP:
+        copyBoard.cells[x][y].figure = new Bishop(figureColor);
+        break;
+      case FiguresNames.ROOK:
+        copyBoard.cells[x][y].figure = new Rook(figureColor);
+        break;
+      case FiguresNames.KNIGHT:
+        copyBoard.cells[x][y].figure = new Knight(figureColor);
+        break;
+      case FiguresNames.QUEEN:
+        copyBoard.cells[x][y].figure = new Queen(figureColor);
+        break;
+    }
+    return copyBoard
   }
 }
