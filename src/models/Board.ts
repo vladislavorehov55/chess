@@ -104,16 +104,14 @@ export class Board {
     }
     return false
   }
-  isCheck(selectedCell: Cell | null, targetCell: Cell, color: Colors, kingsPositions: KingsPositions) {
-    if (selectedCell?.figure) {
-      const enemyKingColor = color;
-      const enemyKingX = kingsPositions[enemyKingColor].x;
-      const enemyKingY = kingsPositions[enemyKingColor].y;
-      const copyBoard = this.getBoardCopy();
-      selectedCell.figure?.canMove(copyBoard, targetCell.x, targetCell.y);
-      if (copyBoard.cells[enemyKingX][enemyKingY].isAvailableForMove) {
-        return true
-      }
+  isCheck(targetCell: Cell, color: Colors, kingsPositions: KingsPositions) {
+    const enemyKingColor = color;
+    const enemyKingX = kingsPositions[enemyKingColor].x;
+    const enemyKingY = kingsPositions[enemyKingColor].y;
+    const copyBoard = this.getBoardCopy();
+    copyBoard.cells[targetCell.x][targetCell.y].figure?.canMove(copyBoard, targetCell.x, targetCell.y)
+    if (copyBoard.cells[enemyKingX][enemyKingY].isAvailableForMove) {
+      return true
     }
     return false
   }

@@ -78,7 +78,7 @@ const BoardComponent: FC<IProps> = (props) => {
     if (copyBoard.isMate(color, kingsPositions.current[color].x, kingsPositions.current[color].y)) {
       setAlertText(`Такой ход приведет к мату`);
       return
-    } else if (copyBoard.isCheck(selectedCell, targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE, kingsPositions.current)) {
+    } else if (copyBoard.isCheck(targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE, kingsPositions.current)) {
       if (copyBoard.isCheckMate(targetCell, kingsPositions.current, currentPlayer)) {
         setIsGameEnded(true);
       } else {
