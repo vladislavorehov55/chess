@@ -28,8 +28,10 @@ export type KingsPositions = {
 }
 
 const BoardComponent: FC<IProps> = (props) => {
-  const {board, setBoard, currentPlayer, setCurrentPlayer, selectedCell, setSelectedCell,
-    setIsOpenedModalForm, targetCellRef, setAlertText} = props;
+  const {
+    board, setBoard, currentPlayer, setCurrentPlayer, selectedCell, setSelectedCell,
+    setIsOpenedModalForm, targetCellRef, setAlertText
+  } = props;
   const kingsPositions = useRef<KingsPositions>({
     white: {
       x: 7,
@@ -75,19 +77,16 @@ const BoardComponent: FC<IProps> = (props) => {
     if (copyBoard.isMate(color, kingsPositions.current[color].x, kingsPositions.current[color].y)) {
       setAlertText(`Такой ход приведет к мату`);
       return
-    }
-    else if (copyBoard.isCheck(selectedCell, targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE, kingsPositions.current)) {
+    } else if (copyBoard.isCheck(selectedCell, targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE, kingsPositions.current)) {
       if (copyBoard.isCheckMate(targetCell, kingsPositions.current, currentPlayer)) {
         setAlertText('Шах и мат');
-      }
-      else {
+      } else {
         setAlertText(`Шах игроку ${currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE}`)
       }
     }
     if (isPawnInBoardEnd(selectedCell, targetCell)) {
       setIsOpenedModalForm(true);
-    }
-    else {
+    } else {
       setCurrentPlayer(currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE);
     }
     updateBoard(copyBoard);
@@ -176,22 +175,30 @@ const BoardComponent: FC<IProps> = (props) => {
 
 
   return (
-    <div className='board'>
-      {
-        board.cells.map((row, index) => {
-          return (
-            <Fragment key={index}>
-              {
-                row.map((cell, ind) => <CellComponent cell={cell}
-                                                      selectedCell={selectedCell}
-                                                      selectCell={selectCell}
-                                                      key={ind}
-                />)
-              }
-            </Fragment>
-          )
-        })
-      }
+    <div>
+      <div className='board'>
+        {
+          board.cells.map((row, index) => {
+            return (
+              <div key={index} className='board__row'>
+                {8 - index}
+                {
+                  row.map((cell, ind) => <CellComponent cell={cell}
+                                                        selectedCell={selectedCell}
+                                                        selectCell={selectCell}
+                                                        key={ind}
+                  />)
+                }
+              </div>
+            )
+          })
+        }
+        <div className='board__row'>
+          {
+            ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(item => <div className='character'>{item}</div>)
+          }
+        </div>
+      </div>
 
     </div>
   )

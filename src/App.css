@@ -12,10 +12,14 @@
 
 }
 .board {
-    width: calc(64 * 8px);
-    height: calc(64 * 8px);
+    /*width: calc(64 * 8px);*/
+    /*height: calc(64 * 8px);*/
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+}
+.board__row {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
 }
 .cell {
     width: 64px;
@@ -96,4 +100,8 @@
 }
 .myAlert_visible {
     top: 0;
+}
+.character {
+    width: 64px;
+    text-align: center;
 }
