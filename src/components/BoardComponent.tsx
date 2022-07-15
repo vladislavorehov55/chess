@@ -16,7 +16,7 @@ interface IProps {
   setAlertText: (text: string) => void
 }
 
-type KingsPositions = {
+export type KingsPositions = {
   white: {
     x: number
     y: number
@@ -43,176 +43,6 @@ const BoardComponent: FC<IProps> = (props) => {
 
   const setKingsPosition = (color: Colors, x: number, y: number) => {
     kingsPositions.current[color] = {x, y};
-  }
-  const isCheckMate = (targetCell: Cell, board: Board) => {
-    const {x, y} = targetCell;
-    const kingPosition = kingsPositions.current[currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE];
-    if (x === kingPosition.x) {
-      const copyBoard1 = board.getBoardCopy();
-      const copyBoard2 = board.getBoardCopy();
-      for (let a = 0; a < board.cells.length; a++) {
-        const row = copyBoard1.cells[a];
-        for (let b = 0; b < row.length; b++) {
-          const cell = row[b];
-          if (cell.figure?.color !== currentPlayer && cell.figure?.name !== FiguresNames.KING) {
-            cell.figure?.canMove(copyBoard1, cell.x, cell.y);
-            if (kingPosition.y - y > 0) {
-              for (let i = y; i < kingPosition.y; i++) {
-                if (copyBoard1.cells[x][i].isAvailableForMove) {
-                  return false
-                }
-              }
-            }
-            if (kingPosition.y - y < 0) {
-              for (let i = kingPosition.y; i < y; i++) {
-                if (copyBoard1.cells[x][i].isAvailableForMove) {
-                  return false
-                }
-              }
-            }
-          }
-          else if (cell.figure.color === currentPlayer) {
-            copyBoard2.cells[a][b].figure?.canMove(copyBoard2, copyBoard2.cells[a][b].x, copyBoard2.cells[a][b].y)
-          }
-        }
-      }
-    }
-    if (y === kingPosition.y) {
-      const copyBoard1 = board.getBoardCopy();
-      const copyBoard2 = board.getBoardCopy();
-      for (let a = 0; a < board.cells.length; a++) {
-        const row = copyBoard1.cells[a];
-        for (let b = 0; b < row.length; b++) {
-          const cell = row[b];
-          if (cell.figure?.color !== currentPlayer && cell.figure?.name !== FiguresNames.KING) {
-            cell.figure?.canMove(copyBoard1, cell.x, cell.y);
-            if (kingPosition.x - x > 0) {
-              for (let i = x; i < kingPosition.x; i++) {
-                if (copyBoard1.cells[i][y].isAvailableForMove) {
-                  return false
-                }
-              }
-            }
-            if (kingPosition.x - x < 0) {
-              for (let i = kingPosition.x; i < x; i++) {
-                if (copyBoard1.cells[i][y].isAvailableForMove) {
-                  return false
-                }
-              }
-            }
-          }
-          else if (cell.figure.color === currentPlayer) {
-            copyBoard2.cells[a][b].figure?.canMove(copyBoard2, copyBoard2.cells[a][b].x, copyBoard2.cells[a][b].y)
-          }
-
-        }
-      }
-    }
-    if (x !== kingPosition.x && y !== kingPosition.y) {
-      const copyBoard1 = board.getBoardCopy();
-      const copyBoard2 = board.getBoardCopy();
-      for (let a = 0; a < board.cells.length; a++) {
-        const row = copyBoard1.cells[a];
-        for (let b = 0; b < row.length; b++) {
-          const cell = row[b];
-          if (cell.figure?.color !== currentPlayer && cell.figure?.name !== FiguresNames.KING) {
-            cell.figure?.canMove(copyBoard1, cell.x, cell.y);
-            if (kingPosition.y > y && kingPosition.x > x ) {
-              for (let i = y, j = x; i < kingPosition.y; i++, j++) {
-                if (copyBoard1.cells[j][i].isAvailableForMove) {
-                  return false
-                }
-              }
-            }
-            if (kingPosition.y > y && kingPosition.x < x) {
-              for (let i = y, j = x; i < kingPosition.y; i++, j--) {
-                if (copyBoard1.cells[j][i].isAvailableForMove) {
-                  return false
-                }
-              }
-            }
-            if (kingPosition.y < y && kingPosition.x > x) {
-              for (let i = y, j = x; i < kingPosition.y; i--, j++) {
-                if (copyBoard1.cells[j][i].isAvailableForMove) {
-                  return false
-                }
-              }
-            }
-            if (kingPosition.y < y && kingPosition.x < x) {
-              for (let i = y, j = x; i < kingPosition.y; i--, j--) {
-                if (copyBoard1.cells[j][i].isAvailableForMove) {
-                  return false
-                }
-              }
-            }
-          }
-          else if (cell.figure.color === currentPlayer) {
-            copyBoard2.cells[a][b].figure?.canMove(copyBoard2, copyBoard2.cells[a][b].x, copyBoard2.cells[a][b].y)
-          }
-        }
-      }
-      if (isKingCanGoFromMate(copyBoard2, kingPosition.x, kingPosition.y)) {
-        return false
-      }
-    }
-    return true
-  }
-  const isKingCanGoFromMate = (board: Board, kingPositionX: number, kingPositionY: number) => {
-    const moveSteps: number[][] = [
-      [-1, 0],
-      [-1, 1],
-      [0, 1],
-      [1, 1],
-      [1, 0],
-      [1, -1],
-      [0, -1],
-      [-1, -1]
-    ]
-    for (let [dx, dy] of moveSteps) {
-      if (board.cells?.[kingPositionX +dx]?.[kingPositionY + dy].figure === null) {
-        if (board.cells[kingPositionX +dx][kingPositionY + dy].isAvailableForMove === false) {
-          return true;
-        }
-      }
-      else if (board.cells?.[kingPositionX +dx]?.[kingPositionY + dy].figure) {
-        if (board.cells?.[kingPositionX +dx]?.[kingPositionY + dy].figure?.color === currentPlayer) {
-          return true
-        }
-      }
-    }
-  }
-  const isCheck = (selectedCell: Cell | null, targetCell: Cell, color: Colors) => {
-    if (selectedCell?.figure) {
-      const enemyKingColor = color;
-      const enemyKingX = kingsPositions.current[enemyKingColor].x;
-      const enemyKingY = kingsPositions.current[enemyKingColor].y;
-
-      const copyBoard = board.getBoardCopy();
-      selectedCell.figure?.canMove(copyBoard, targetCell.x, targetCell.y);
-
-      if (copyBoard.cells[enemyKingX][enemyKingY].isAvailableForMove) {
-        return true
-      }
-    }
-    return false
-  }
-  const isMate = (color: Colors, board: Board) => {
-    const copyBoard = board.getBoardCopy();
-    const kingX = kingsPositions.current[color].x;
-    const kingY = kingsPositions.current[color].y;
-    for (let i = 0; i < copyBoard.cells.length; i++) {
-      const row = copyBoard.cells[i];
-      for (let j = 0; j < row.length; j++) {
-        const cell = row[j];
-        if (cell.figure?.color !== color) {
-          cell.figure?.canMove(copyBoard, cell.x, cell.y);
-          if (copyBoard.cells[kingX][kingY].isAvailableForMove) {
-            return true
-          }
-        }
-      }
-    }
-    return false
   }
   const updateBoard = (newBoard: Board) => {
     setBoard(newBoard);
@@ -241,16 +71,18 @@ const BoardComponent: FC<IProps> = (props) => {
       setKingsPosition(selectedCell?.figure?.color, targetCell.x, targetCell.y);
     }
     copyBoard = cancelHighlightCells(copyBoard);
-    if (isMate(currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK, copyBoard)) {
+    let color = currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK
+    if (copyBoard.isMate(color, kingsPositions.current[color].x, kingsPositions.current[color].y)) {
       setAlertText(`Такой ход приведет к мату`);
       return
     }
-    else if (isCheck(selectedCell, targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE)) {
-      if (isCheckMate(targetCell, copyBoard)) {
-        setAlertText('Шах и мат')
-        return
+    else if (copyBoard.isCheck(selectedCell, targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE, kingsPositions.current)) {
+      if (copyBoard.isCheckMate(targetCell, kingsPositions.current, currentPlayer)) {
+        setAlertText('Шах и мат');
       }
-      setAlertText(`Шах игроку ${currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE}`)
+      else {
+        setAlertText(`Шах игроку ${currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE}`)
+      }
     }
     if (isPawnInBoardEnd(selectedCell, targetCell)) {
       setIsOpenedModalForm(true);
@@ -286,9 +118,8 @@ const BoardComponent: FC<IProps> = (props) => {
         return
       }
       if (cell.figure) {
-        // выбрали клетку, затем нажали на клетку, на которой есть фигуру, но на нее нельзя ходить
+        // выбрали клетку, затем нажали на клетку, на которой есть фигура, но на нее нельзя ходить
         if (!cell.isAvailableForMove) {
-          console.log('MMMMM')
           // cancelHighlightCells(board)
           if (cell.figure.color !== currentPlayer) {
             return
@@ -312,7 +143,7 @@ const BoardComponent: FC<IProps> = (props) => {
     }
     if (cell.figure) {
       if (cell.figure.color !== currentPlayer) {
-        alert('Нельзя ходить чужими фигурами')
+        setAlertText('Нельзя ходить чужими фигурами')
         return
       }
       setSelectedCell(cell)
