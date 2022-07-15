@@ -104,23 +104,26 @@ export class Board {
     }
     return false
   }
-  isCheck(targetCell: Cell, color: Colors, kingsPositions: KingsPositions) {
+  isCheck(targetCell: Cell | null, color: Colors, kingsPositions: KingsPositions) {
     const enemyKingColor = color;
     const enemyKingX = kingsPositions[enemyKingColor].x;
     const enemyKingY = kingsPositions[enemyKingColor].y;
     const copyBoard = this.getBoardCopy();
-    copyBoard.cells[targetCell.x][targetCell.y].figure?.canMove(copyBoard, targetCell.x, targetCell.y)
-    if (copyBoard.cells[enemyKingX][enemyKingY].isAvailableForMove) {
-      return true
+    if (targetCell) {
+      copyBoard.cells[targetCell.x][targetCell.y].figure?.canMove(copyBoard, targetCell.x, targetCell.y)
+      if (copyBoard.cells[enemyKingX][enemyKingY].isAvailableForMove) {
+        return true
+      }
+      return false
     }
-    return false
+
   }
-  isCheckMate(targetCell: Cell, kingsPositions: KingsPositions, currentPlayer: string) {
-    const {x, y} = targetCell;
+  isCheckMate(targetCell: Cell | null, kingsPositions: KingsPositions, currentPlayer: string) {
+    const {x, y} = targetCell as Cell;
     const kingPosition = kingsPositions[currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE];
+    let copyBoard2: Board = this.getBoardCopy();
     if (x === kingPosition.x) {
       const copyBoard1 = this.getBoardCopy();
-      const copyBoard2 = this.getBoardCopy();
       for (let a = 0; a < this.cells.length; a++) {
         const row = copyBoard1.cells[a];
         for (let b = 0; b < row.length; b++) {
@@ -148,9 +151,8 @@ export class Board {
         }
       }
     }
-    if (y === kingPosition.y) {
+    else if (y === kingPosition.y) {
       const copyBoard1 = this.getBoardCopy();
-      const copyBoard2 = this.getBoardCopy();
       for (let a = 0; a < this.cells.length; a++) {
         const row = copyBoard1.cells[a];
         for (let b = 0; b < row.length; b++) {
@@ -179,9 +181,8 @@ export class Board {
         }
       }
     }
-    if (x !== kingPosition.x && y !== kingPosition.y) {
+    else if (x !== kingPosition.x && y !== kingPosition.y) {
       const copyBoard1 = this.getBoardCopy();
-      const copyBoard2 = this.getBoardCopy();
       for (let a = 0; a < this.cells.length; a++) {
         const row = copyBoard1.cells[a];
         for (let b = 0; b < row.length; b++) {
@@ -222,9 +223,9 @@ export class Board {
           }
         }
       }
-      if (this.isKingCanGoFromMate(copyBoard2, kingPosition.x, kingPosition.y, currentPlayer)) {
-        return false
-      }
+    }
+    if (this.isKingCanGoFromMate(copyBoard2, kingPosition.x, kingPosition.y, currentPlayer)) {
+      return false
     }
     return true
   }

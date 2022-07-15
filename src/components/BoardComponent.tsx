@@ -15,6 +15,9 @@ interface IProps {
   targetCellRef: React.MutableRefObject<Cell | null>
   setAlertText: (text: string) => void
   setIsGameEnded: (flag: boolean) => void
+  kingsPositions: {
+    current: KingsPositions
+  }
 }
 
 export type KingsPositions = {
@@ -31,18 +34,18 @@ export type KingsPositions = {
 const BoardComponent: FC<IProps> = (props) => {
   const {
     board, setBoard, currentPlayer, setCurrentPlayer, selectedCell, setSelectedCell,
-    setIsOpenedModalForm, targetCellRef, setAlertText, setIsGameEnded
+    setIsOpenedModalForm, targetCellRef, setAlertText, setIsGameEnded, kingsPositions
   } = props;
-  const kingsPositions = useRef<KingsPositions>({
-    white: {
-      x: 7,
-      y: 3,
-    },
-    black: {
-      x: 0,
-      y: 3
-    }
-  })
+  // const kingsPositions = useRef<KingsPositions>({
+  //   white: {
+  //     x: 7,
+  //     y: 3,
+  //   },
+  //   black: {
+  //     x: 0,
+  //     y: 3
+  //   }
+  // })
 
   const setKingsPosition = (color: Colors, x: number, y: number) => {
     kingsPositions.current[color] = {x, y};
