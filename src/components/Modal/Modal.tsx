@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 interface IProps {
   children: React.ReactNode;
-  closeFormChooseFigure: (e: React.MouseEvent) => void
+  closeFormChooseFigure?: (e: React.MouseEvent) => void | null
 }
 const Modal: FC<IProps> = (props) => {
   return (

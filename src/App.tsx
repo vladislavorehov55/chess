@@ -8,6 +8,7 @@ import FormChooseFigure from './components/FormChooseFigure';
 import {Cell} from './models/Cell';
 import {Colors, FiguresNames} from './utils/enums';
 import MyAlert from './components/MyAlert';
+import Congratulations from './components/Congratulations';
 
 function App() {
   const [board, setBoard] = useState(new Board());
@@ -15,20 +16,15 @@ function App() {
   const [isOpenedModalForm, setIsOpenedModalForm] = useState(false);
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
   const [alertText, setAlertText] = useState('');
+  const [isGameEnded, setIsGameEnded] = useState(false);
 
+  const targetCellRef = useRef<Cell | null>(null);
 
   const closeFormChooseFigure = (e: React.MouseEvent) => {
     e.stopPropagation()
     setIsOpenedModalForm(false)
   }
 
-  useEffect(() => {
-    const newBoard = new Board();
-    newBoard.initCells();
-    setBoard(newBoard);
-  }, [])
-
-  const targetCellRef = useRef<Cell | null>(null);
   const exchangePawn = (newFigureName: FiguresNames) => {
     const newBoard = board.exchangePawn(targetCellRef.current?.x as number, targetCellRef.current?.y as number, newFigureName,
       currentPlayer as Colors);
@@ -36,9 +32,19 @@ function App() {
     setIsOpenedModalForm(false);
     setCurrentPlayer(currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE);
   }
+
+  const restartGame = () => {
+    const newBoard: Board = new Board();
+    newBoard.initCells();
+    setBoard(newBoard)
+    setIsGameEnded(false);
+  }
+  useEffect(() => {
+    restartGame()
+  }, [])
   return (
     <div className="app">
-       <MyAlert text={alertText} setAlertText={setAlertText}/>
+      <MyAlert text={alertText} setAlertText={setAlertText}/>
       {
         isOpenedModalForm &&
         <Modal closeFormChooseFigure={closeFormChooseFigure}>
@@ -47,6 +53,16 @@ function App() {
           />
         </Modal>
       }
+      {
+        isGameEnded &&
+        <Modal>
+          <Congratulations
+                           currentPlayer={currentPlayer}
+                           restartGame={restartGame}
+          />
+        </Modal>
+      }
+      <button className='btnRestart app__btnRestart'>Начать заново</button>
       <h3>Сейчас ходят: {currentPlayer}</h3>
       <div className='main'>
         <BoardComponent board={board}
@@ -58,6 +74,7 @@ function App() {
                         setIsOpenedModalForm={setIsOpenedModalForm}
                         targetCellRef={targetCellRef}
                         setAlertText={setAlertText}
+                        setIsGameEnded={setIsGameEnded}
         />
         <div className='lostFiguresWrapper'>
           <LostFigures title='Черные' figures={board.blackFiguresLost}/>
