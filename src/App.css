@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
+    padding-top: 35px;
 }
 .main {
     display: flex;
@@ -80,4 +81,19 @@
     top: 5px;
     right: 10px;
     cursor: pointer;
+}
+.myAlert {
+    min-height: 30px;
+    background-color: red;
+    position: absolute;
+    top: -40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    transition: top 0.5s;
+}
+.myAlert_visible {
+    top: 0;
 }

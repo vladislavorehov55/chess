@@ -7,12 +7,14 @@ import Modal from './components/Modal/Modal';
 import FormChooseFigure from './components/FormChooseFigure';
 import {Cell} from './models/Cell';
 import {Colors, FiguresNames} from './utils/enums';
+import MyAlert from './components/MyAlert';
 
 function App() {
   const [board, setBoard] = useState(new Board());
   const [currentPlayer, setCurrentPlayer] = useState('white');
   const [isOpenedModalForm, setIsOpenedModalForm] = useState(false);
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
+  const [alertText, setAlertText] = useState('');
 
 
   const closeFormChooseFigure = (e: React.MouseEvent) => {
@@ -36,6 +38,7 @@ function App() {
   }
   return (
     <div className="app">
+       <MyAlert text={alertText} setAlertText={setAlertText}/>
       {
         isOpenedModalForm &&
         <Modal closeFormChooseFigure={closeFormChooseFigure}>
@@ -54,6 +57,7 @@ function App() {
                         setSelectedCell={setSelectedCell}
                         setIsOpenedModalForm={setIsOpenedModalForm}
                         targetCellRef={targetCellRef}
+                        setAlertText={setAlertText}
         />
         <div className='lostFiguresWrapper'>
           <LostFigures title='Черные' figures={board.blackFiguresLost}/>

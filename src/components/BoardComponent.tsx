@@ -13,6 +13,7 @@ interface IProps {
   setSelectedCell: (cell: Cell | null) => void
   setIsOpenedModalForm: (flag: boolean) => void
   targetCellRef: React.MutableRefObject<Cell | null>
+  setAlertText: (text: string) => void
 }
 
 type KingsPositions = {
@@ -28,7 +29,7 @@ type KingsPositions = {
 
 const BoardComponent: FC<IProps> = (props) => {
   const {board, setBoard, currentPlayer, setCurrentPlayer, selectedCell, setSelectedCell,
-    setIsOpenedModalForm, targetCellRef} = props;
+    setIsOpenedModalForm, targetCellRef, setAlertText} = props;
   const kingsPositions = useRef<KingsPositions>({
     white: {
       x: 7,
@@ -241,21 +242,21 @@ const BoardComponent: FC<IProps> = (props) => {
     }
     copyBoard = cancelHighlightCells(copyBoard);
     if (isMate(currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK, copyBoard)) {
-      alert(`Мат игроку ${currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK}`)
+      setAlertText(`Такой ход приведет к мату`);
+      return
     }
     else if (isCheck(selectedCell, targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE)) {
       if (isCheckMate(targetCell, copyBoard)) {
-        alert('Шах и мат')
+        setAlertText('Шах и мат')
         return
       }
-      alert(`Шах игроку ${currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE}`)
+      setAlertText(`Шах игроку ${currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE}`)
     }
     if (isPawnInBoardEnd(selectedCell, targetCell)) {
-      console.log('er')
       setIsOpenedModalForm(true);
     }
     else {
-      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+      setCurrentPlayer(currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE);
     }
     updateBoard(copyBoard);
     setSelectedCell(null);
