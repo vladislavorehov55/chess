@@ -8,7 +8,7 @@ import {King} from './figures/King';
 import {Queen} from './figures/Queen';
 import {cloneDeep} from 'lodash';
 import {Figure} from './figures/Figure';
-import {KingsPositions} from '../components/BoardComponent';
+import {KingsPositions} from '../App';
 
 
 export class Board {

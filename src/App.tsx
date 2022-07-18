@@ -18,7 +18,7 @@ export type KingsPositions = {
 
 function App() {
   const [board, setBoard] = useState(new Board());
-  const [currentPlayer, setCurrentPlayer] = useState('white');
+  const [currentPlayer, setCurrentPlayer] = useState(Colors.WHITE);
   const [isOpenedModalForm, setIsOpenedModalForm] = useState(false);
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
   const [alertText, setAlertText] = useState('');
@@ -41,8 +41,7 @@ function App() {
   }
 
   const exchangePawn = (newFigureName: FiguresNames) => {
-    const newBoard = board.exchangePawn(targetCellRef.current?.x as number, targetCellRef.current?.y as number, newFigureName,
-      currentPlayer as Colors);
+    const newBoard = board.exchangePawn(targetCellRef.current?.x as number, targetCellRef.current?.y as number, newFigureName, currentPlayer);
     if (newBoard.isCheck(targetCellRef.current, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE, kingsPositions.current)) {
       if (newBoard.isCheckMate(targetCellRef.current, kingsPositions.current, currentPlayer)) {
         setIsGameEnded(true);

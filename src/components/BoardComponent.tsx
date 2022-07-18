@@ -8,8 +8,8 @@ import {KingsPositions} from '../App';
 interface IProps {
   board: Board
   setBoard: (newBoard: Board) => void
-  currentPlayer: string
-  setCurrentPlayer: (nextPlayer: string) => void
+  currentPlayer: Colors
+  setCurrentPlayer: (nextPlayer: Colors) => void
   selectedCell: Cell | null
   setSelectedCell: (cell: Cell | null) => void
   setIsOpenedModalForm: (flag: boolean) => void
@@ -58,8 +58,7 @@ const BoardComponent: FC<IProps> = (props) => {
       setKingsPosition(selectedCell?.figure?.color, targetCell.x, targetCell.y);
     }
     copyBoard = cancelHighlightCells(copyBoard);
-    let color = currentPlayer === Colors.WHITE ? Colors.WHITE : Colors.BLACK
-    if (copyBoard.isMate(color, kingsPositions.current[color].x, kingsPositions.current[color].y)) {
+    if (copyBoard.isMate(currentPlayer, kingsPositions.current[currentPlayer].x, kingsPositions.current[currentPlayer].y)) {
       setAlertText(`Такой ход приведет к мату`);
       return
     } else if (copyBoard.isCheck(targetCell, currentPlayer === Colors.WHITE ? Colors.BLACK : Colors.WHITE, kingsPositions.current)) {
@@ -83,7 +82,6 @@ const BoardComponent: FC<IProps> = (props) => {
       /// выбрали клетку и нажали на пустую клетку
       if (cell.figure === null) {
         if (!cell.isAvailableForMove) {
-          // cancelHighlightCells(board)
           updateBoard(cancelHighlightCells(board))
           setSelectedCell(null)
           return
@@ -96,7 +94,6 @@ const BoardComponent: FC<IProps> = (props) => {
       }
       // выбрали клетку и нажали на нее же
       if (selectedCell.x === cell.x && selectedCell.y === cell.y) {
-        // cancelHighlightCells(board)
         updateBoard(cancelHighlightCells(board))
         setSelectedCell(null)
         return
@@ -104,7 +101,6 @@ const BoardComponent: FC<IProps> = (props) => {
       if (cell.figure) {
         // выбрали клетку, затем нажали на клетку, на которой есть фигура, но на нее нельзя ходить
         if (!cell.isAvailableForMove) {
-          // cancelHighlightCells(board)
           if (cell.figure.color !== currentPlayer) {
             return
           }
@@ -118,7 +114,6 @@ const BoardComponent: FC<IProps> = (props) => {
         }
       }
       if (cell.figure) {
-        // cancelHighlightCells(board);
         updateBoard(cancelHighlightCells(board))
         setSelectedCell(cell);
         return
@@ -148,7 +143,6 @@ const BoardComponent: FC<IProps> = (props) => {
       }
     }
     return copyBoard
-    // updateBoard(copyBoard)
   }
 
 
@@ -160,7 +154,6 @@ const BoardComponent: FC<IProps> = (props) => {
 
 
   return (
-
     <div className='board'>
       {
         board.cells.map((row, index) => {
@@ -180,7 +173,7 @@ const BoardComponent: FC<IProps> = (props) => {
       }
       <div className='board__row'>
         {
-          ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(item => <div className='character'>{item}</div>)
+          ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map((item, ind) => <div key={ind} className='character'>{item}</div>)
         }
       </div>
     </div>
