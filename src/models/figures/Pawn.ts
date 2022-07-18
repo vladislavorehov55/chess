@@ -8,7 +8,6 @@ import {Board} from '../Board';
 
 export class Pawn extends Figure {
   isFirstStep: Boolean
-
   constructor(color: Colors) {
     super(FiguresNames.PAWN, color, color === Colors.WHITE ? whitePawnLogo : blackPawnLogo);
     this.isFirstStep = true;
