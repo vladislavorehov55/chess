@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
-import BoardComponent, {KingsPositions} from './components/BoardComponent';
+import BoardComponent from './components/BoardComponent';
 import {Board} from './models/Board';
 import LostFigures from './components/LostFigures';
 import Modal from './components/Modal/Modal';
@@ -9,6 +9,12 @@ import {Cell} from './models/Cell';
 import {Colors, FiguresNames} from './utils/enums';
 import MyAlert from './components/MyAlert';
 import Congratulations from './components/Congratulations';
+export type KingsPositions = {
+  [key in Colors]: {
+    x: number,
+    y: number
+  }
+};
 
 function App() {
   const [board, setBoard] = useState(new Board());
@@ -20,11 +26,11 @@ function App() {
 
   const targetCellRef = useRef<Cell | null>(null);
   const kingsPositions = useRef<KingsPositions>({
-    white: {
+    [Colors.WHITE] : {
       x: 7,
       y: 3,
     },
-    black: {
+    [Colors.BLACK]: {
       x: 0,
       y: 3
     }

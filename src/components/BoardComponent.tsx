@@ -1,8 +1,9 @@
 import {Board} from '../models/Board';
-import React, {FC, useEffect, useRef} from 'react';
+import React, {FC, useEffect} from 'react';
 import CellComponent from './CellComponent';
 import {Cell} from '../models/Cell';
 import {Colors, FiguresNames} from '../utils/enums';
+import {KingsPositions} from '../App';
 
 interface IProps {
   board: Board
@@ -20,32 +21,12 @@ interface IProps {
   }
 }
 
-export type KingsPositions = {
-  white: {
-    x: number
-    y: number
-  }
-  black: {
-    x: number
-    y: number
-  }
-}
 
 const BoardComponent: FC<IProps> = (props) => {
   const {
     board, setBoard, currentPlayer, setCurrentPlayer, selectedCell, setSelectedCell,
     setIsOpenedModalForm, targetCellRef, setAlertText, setIsGameEnded, kingsPositions
   } = props;
-  // const kingsPositions = useRef<KingsPositions>({
-  //   white: {
-  //     x: 7,
-  //     y: 3,
-  //   },
-  //   black: {
-  //     x: 0,
-  //     y: 3
-  //   }
-  // })
 
   const setKingsPosition = (color: Colors, x: number, y: number) => {
     kingsPositions.current[color] = {x, y};
