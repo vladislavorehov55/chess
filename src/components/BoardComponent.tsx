@@ -159,7 +159,9 @@ const BoardComponent: FC<IProps> = (props) => {
         board.cells.map((row, index) => {
           return (
             <div key={index} className='board__row'>
-              {8 - index}
+              <span>
+                {8 - index}
+              </span>
               {
                 row.map((cell, ind) => <CellComponent cell={cell}
                                                       selectedCell={selectedCell}

@@ -1,23 +1,31 @@
 .app {
+    min-height: 100vh;
+}
+.app__container {
+    padding-top: 35px;
+    padding-bottom: 10px;
+}
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    padding-top: 35px;
 }
+
 .main {
     display: flex;
     justify-content: center;
     width: 100%;
-
 }
+
 .board {
     margin-right: 5px;
 }
+
 .board__row {
     display: flex;
     align-items: center;
 }
+
 .cell {
     width: 64px;
     height: 64px;
@@ -25,32 +33,40 @@
     justify-content: center;
     align-items: center;
 }
+
 .cell img {
     width: 42px;
     height: 42px;
 }
+
 .black {
     background: deepskyblue;
 }
+
 .white {
-    background: #eed4ac ;
+    background: #eed4ac;
 }
+
 .selectedCell {
     background: lightgreen;
 }
+
 .available {
     width: 12px;
     height: 12px;
     border-radius: 50%;
     background: lightgreen;
 }
+
 .canBeEaten {
     background: brown;
 }
+
 .lostFiguresWrapper {
 }
+
 .lost {
-    height: calc(50vh - 60px);
+    min-height: 50%;
     padding: 30px;
     background-color: lightgray;
 }
@@ -66,24 +82,29 @@
     justify-content: center;
     align-items: center;
 }
+
 .modal__formChoose, .modal__congratulationsBlock {
     padding: 10px;
 }
+
 .formChoose, .congratulationsBlock {
     background-color: white;
     min-width: 200px;
     border-radius: 5px;
     position: relative;
 }
+
 .formChoose__list {
     list-style: none;
 }
+
 .close {
     position: absolute;
     top: 5px;
     right: 10px;
     cursor: pointer;
 }
+
 .myAlert {
     min-height: 30px;
     background-color: red;
@@ -96,12 +117,19 @@
     padding: 5px;
     transition: top 0.5s;
 }
+
 .myAlert_visible {
     top: 0;
 }
+
 .character {
     width: 64px;
     text-align: center;
+}
+
+.board__row:last-child::before {
+    content: '0';
+    color: #fff;
 }
 .btnRestart {
     background-color: #fff;
@@ -111,14 +139,111 @@
     margin: 0 auto;
     cursor: pointer;
 }
+
 .congratulationsBlock__btnRestart {
     margin-top: 10px;
 }
+
 .app__btnRestart {
     margin-bottom: 10px;
 }
+
 .congratulationsBlock {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media all and (max-width: 720px) {
+    .cell {
+        width: 54px;
+        height: 54px;
+    }
+
+    .cell img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .lostFiguresWrapper {
+        min-height: calc(54px * 8);
+    }
+
+    .lost {
+        padding: 15px;
+        height: 50%;
+    }
+
+    .character {
+        width: 54px;
+    }
+}
+
+@media all and (max-width: 620px) {
+    .main {
+        flex-direction: column;
+    }
+
+    .board {
+        margin: 0 auto;
+    }
+
+    .lostFiguresWrapper {
+        min-height: auto;
+    }
+
+    .lost {
+        padding: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .lost__wrapper {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+    }
+}
+
+@media all and (max-width: 450px) {
+    .cell {
+        width: 44px;
+        height: 44px;
+    }
+
+    .character {
+        width: 44px;
+    }
+}
+
+@media all and (max-width: 380px) {
+    .cell {
+        width: 34px;
+        height: 34px;
+    }
+
+    .cell img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .character {
+        width: 34px;
+    }
+}
+@media all and (min-width: 1130px) {
+    .cell {
+        width: 84px;
+        height: 84px;
+    }
+
+    .cell img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .character {
+        width: 84px;
+    }
 }

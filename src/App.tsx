@@ -3,7 +3,7 @@ import './App.css';
 import BoardComponent from './components/BoardComponent';
 import {Board} from './models/Board';
 import LostFigures from './components/LostFigures';
-import Modal from './components/Modal/Modal';
+import Modal from './components/Modal';
 import FormChooseFigure from './components/FormChooseFigure';
 import {Cell} from './models/Cell';
 import {Colors, FiguresNames} from './utils/enums';
@@ -65,42 +65,44 @@ function App() {
   }, [])
   return (
     <div className="app">
-      <MyAlert text={alertText} setAlertText={setAlertText}/>
-      {
-        isOpenedModalForm &&
-        <Modal closeFormChooseFigure={closeFormChooseFigure}>
-          <FormChooseFigure closeFormChooseFigure={closeFormChooseFigure}
-                            exchangePawn={exchangePawn}
+      <div className='container app__container'>
+        <MyAlert text={alertText} setAlertText={setAlertText}/>
+        {
+          isOpenedModalForm &&
+          <Modal closeFormChooseFigure={closeFormChooseFigure}>
+            <FormChooseFigure closeFormChooseFigure={closeFormChooseFigure}
+                              exchangePawn={exchangePawn}
+            />
+          </Modal>
+        }
+        {
+          isGameEnded &&
+          <Modal>
+            <Congratulations
+              currentPlayer={currentPlayer}
+              restartGame={restartGame}
+            />
+          </Modal>
+        }
+        <button className='btnRestart app__btnRestart' onClick={restartGame}>Начать заново</button>
+        <h3>Сейчас ходят: {currentPlayer}</h3>
+        <div className='main'>
+          <BoardComponent board={board}
+                          setBoard={setBoard}
+                          currentPlayer={currentPlayer}
+                          setCurrentPlayer={setCurrentPlayer}
+                          selectedCell={selectedCell}
+                          setSelectedCell={setSelectedCell}
+                          setIsOpenedModalForm={setIsOpenedModalForm}
+                          targetCellRef={targetCellRef}
+                          setAlertText={setAlertText}
+                          setIsGameEnded={setIsGameEnded}
+                          kingsPositions={kingsPositions}
           />
-        </Modal>
-      }
-      {
-        isGameEnded &&
-        <Modal>
-          <Congratulations
-                           currentPlayer={currentPlayer}
-                           restartGame={restartGame}
-          />
-        </Modal>
-      }
-      <button className='btnRestart app__btnRestart' onClick={restartGame}>Начать заново</button>
-      <h3>Сейчас ходят: {currentPlayer}</h3>
-      <div className='main'>
-        <BoardComponent board={board}
-                        setBoard={setBoard}
-                        currentPlayer={currentPlayer}
-                        setCurrentPlayer={setCurrentPlayer}
-                        selectedCell={selectedCell}
-                        setSelectedCell={setSelectedCell}
-                        setIsOpenedModalForm={setIsOpenedModalForm}
-                        targetCellRef={targetCellRef}
-                        setAlertText={setAlertText}
-                        setIsGameEnded={setIsGameEnded}
-                        kingsPositions={kingsPositions}
-        />
-        <div className='lostFiguresWrapper'>
-          <LostFigures title='Черные' figures={board.blackFiguresLost}/>
-          <LostFigures title='Белые' figures={board.whiteFiguresLost}/>
+          <div className='lostFiguresWrapper'>
+            <LostFigures title='Черные' figures={board.blackFiguresLost}/>
+            <LostFigures title='Белые' figures={board.whiteFiguresLost}/>
+          </div>
         </div>
       </div>
     </div>
