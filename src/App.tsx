@@ -78,7 +78,7 @@ function App() {
           />
         </Modal>
       }
-      <button className='btnRestart app__btnRestart'>Начать заново</button>
+      <button className='btnRestart app__btnRestart' onClick={restartGame}>Начать заново</button>
       <h3>Сейчас ходят: {currentPlayer}</h3>
       <div className='main'>
         <BoardComponent board={board}
